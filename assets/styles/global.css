@@ -114,3 +114,7 @@ main>section {
   grid-template-areas: 'slider icon';
   grid-template-columns: 80% 15%;
 }
+
+h2.fontcss {
+  font-family: fantasy;
+}

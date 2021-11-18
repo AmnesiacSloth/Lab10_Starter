@@ -11,6 +11,7 @@
   <!-- Main Stylesheet & Scripts -->
   <link rel="stylesheet" href="assets/styles/global.css" />
   <script src="assets/scripts/speechSynth.js" type="module"></script>
+  <script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 </head>
 
 <body>
@@ -22,7 +23,7 @@
   <main>
     <section id="explore">
       <header>
-        <h2>Speech Synthesizer</h2>
+        <h2 id="speech-text">Speech Synthesizer</h2>
       </header>
       <img src="assets/images/smiling.png" alt="Smiling face" />
       <textarea name="text-to-speak" id="text-to-speak" rows="10" placeholder="Text to speak here"></textarea>
@@ -32,6 +33,40 @@
       <button>Press to Talk</button>
     </section>
   </main>
+
+  <script>
+    // RANDOM STRING GENERATOR
+    function makeid(length) {
+      var result           = '';
+      var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+      for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+     }
+     return result;
+    }
+    // USER KEY MUST CHANGE ON RELOAD
+      var user = {
+        key: 'text123456',
+      };
+      // Handles reload behavior
+    if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+      console.log(`User key 1:${user.key}`);
+      user.key = makeid(6);
+      console.log(`User key 2:${user.key}`);
+    }
+      var ldclient = LDClient.initialize('61960207fe267315531d7694', user);
+      function render() {
+        var shouldShow = ldclient.variation('speech-font', false);
+        if (shouldShow) {
+          var element = document.getElementById("speech-text");
+          element.classList.add("fontcss");
+        }
+      }
+      
+      ldclient.on('ready', render);
+      ldclient.on('change', render);
+    </script>
 </body>
 
 </html>
